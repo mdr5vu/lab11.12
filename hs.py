@@ -9,3 +9,4 @@ def hs(n):
             n = (3 * n + 1)
     print (n)
     print (l + 1)
+    return None

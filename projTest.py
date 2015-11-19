@@ -31,8 +31,8 @@ import pygame as pg
 
 # Initialize world
 name = "Simple Mario Fun. Press the mouse to jump over the objects. Make sure you time it right!"
-width = 2000
-height = 1000
+width = 500
+height = 550
 rw.newDisplay(width, height, name)
 
 ################################################################
@@ -46,7 +46,7 @@ myimage = dw.loadImage("cat.bmp")
 #
 def updateDisplay(state):
     dw.fill(dw.blue)
-    dw.draw(myimage, (state[0], height/1.3))
+    dw.draw(myimage, (state[0], state[2]))
 
 
 ################################################################
@@ -61,8 +61,8 @@ def updateState(state):
     newYvalue = state[3]
     newstate = state[4]
     if state[4] == False:
-       newYvalue -= 1
-    if newYvalue < -7:
+       newYvalue += 1
+    if newYvalue > 7:
         newYvalue = 0
         newstate = True
     return(state[0]+state[1],state[1],state[2]+state[3],newYvalue,newstate)
@@ -96,7 +96,7 @@ def handleEvent(state, event):
 #    print("Handling event: " + str(event))
     if (event.type == pg.MOUSEBUTTONDOWN):
         if state[4]:
-            return (state[0],state[1],state[2],7,False)
+            return (state[0],state[1],state[2],-7,False)
         return state
     else:
         return(state)

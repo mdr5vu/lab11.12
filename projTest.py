@@ -58,7 +58,14 @@ def updateDisplay(state):
 #
 # state -> state
 def updateState(state):
-    return(state[0]+state[1],state[1],state[2]+state[3],state[3])
+    newYvalue = state[3]
+    newstate = state[4]
+    if state[4] == False:
+       newYvalue -= 1
+    if newYvalue < -7:
+        newYvalue = 0
+        newstate = True
+    return(state[0]+state[1],state[1],state[2]+state[3],newYvalue,newstate)
 
 ################################################################
 
@@ -88,11 +95,9 @@ def endState(state):
 def handleEvent(state, event):  
 #    print("Handling event: " + str(event))
     if (event.type == pg.MOUSEBUTTONDOWN):
-        if (state[1]) == 1:
-            newState = -1
-        else:
-            newState = 1   
-        return((state[0],newState, state[2],state[3]))
+        if state[4]:
+            return (state[0],state[1],state[2],7,False)
+        return state
     else:
         return(state)
 
@@ -101,7 +106,7 @@ def handleEvent(state, event):
 # World state will be single x coordinate at left edge of world
 
 # The cat starts at the left, moving right 
-initState = (0,1,2,3)
+initState = (width/2,0,height/1.3,0,True)
 
 # Run the simulation no faster than 60 frames per second
 frameRate = 60

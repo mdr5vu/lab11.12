@@ -67,7 +67,7 @@ def updateMario(state):
     newstate = state[4]
     if state[4] == False:
        newYvalue += 1
-    if newYvalue > 7:
+    if newYvalue > 18:
         newYvalue = 0
         newstate = True
     return((state[0],state[1],state[2]+state[3],newYvalue,newState))
@@ -102,7 +102,7 @@ def handleEvent(state, event):
 #    print("Handling event: " + str(event))
     if (event.type == pg.MOUSEBUTTONDOWN):
         if state[4]:
-            return (state[0],state[1],state[2],-7,False)
+            return (state[0],state[1],state[2],-18,False)
         return state
     else:
         return(state)

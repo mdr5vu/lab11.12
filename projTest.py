@@ -47,8 +47,8 @@ goomba = dw.loadImage("goomba.png")
 #
 def updateDisplay(state):
     dw.fill(dw.blue)
-    dw.draw(mario, (state[0], state[2]))
-    dw.draw(goomba, (state[0], state[2]))
+    dw.draw(mario, (state[0][0], state[0][2]))
+    dw.draw(goomba, (state[1][0], state[1][2]))
 
 
 ################################################################
@@ -60,6 +60,9 @@ def updateDisplay(state):
 #
 # state -> state
 def updateState(state):
+    return (updateMario(state[0]),updateGoomba(state[1]))
+
+def updateMario(state):
     newYvalue = state[3]
     newstate = state[4]
     if state[4] == False:
@@ -67,7 +70,9 @@ def updateState(state):
     if newYvalue > 7:
         newYvalue = 0
         newstate = True
-    return(state[0]+state[1],state[1],state[2]+state[3],newYvalue,newstate)
+    return((state[0],state[1],state[2]+state[3],newYvalue,newState))
+def updateGoomba(state):
+    return((state[0]+state[1],state[1],state[2],state[3]))
 
 ################################################################
 

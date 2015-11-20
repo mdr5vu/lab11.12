@@ -38,8 +38,7 @@ rw.newDisplay(width, height, name)
 ################################################################
 
 # Display the state by drawing a cat at that x coordinate
-mario = dw.loadImage("Paper Mario.png")
-goomba = dw.loadImage("goomba.png")
+myimage = dw.loadImage("Paper Mario.png")
 
 # state -> image (IO)
 # draw the cat halfway up the screen (height/2) and at the x
@@ -47,8 +46,7 @@ goomba = dw.loadImage("goomba.png")
 #
 def updateDisplay(state):
     dw.fill(dw.blue)
-    dw.draw(mario, (state[0], state[2]))
-    dw.draw(goomba, (state[0], state[2]))
+    dw.draw(myimage, (state[0], state[2]))
 
 
 ################################################################
@@ -80,6 +78,7 @@ def endState(state):
     else:
         return False
 
+
 ################################################################
 
 # We handle each event by printing (a serialized version of) it on the console
@@ -106,28 +105,12 @@ def handleEvent(state, event):
 
 # World state will be single x coordinate at left edge of world
 
-#
-# x pos of g
-# y pos of mario
-# 
-    
 # The cat starts at the left, moving right 
-initState = (width/4,0,height/1.3,0,True)
+initState = (width/2,0,height/1.3,0,True)
 
-# initState = (mario_y, mario_is_jumping, goomba_x, .., ..)
-# state[0] = mario_y, state[1] = mario_is_jumpin
-
-# initState = ((mario_y, mario_is_jumping), (goomba_x))
-# initState = (marioState, goombaState)
-# state[0][0] = mario_y, state[1][0] = goomba_x
-
-# def updateState(state):
-#    return (updateMario(state[0]), updateGoomba(state[1]))
- 
 # Run the simulation no faster than 60 frames per second
 frameRate = 60
 
 # Run the simulation!
 rw.runWorld(initState, updateDisplay, updateState, handleEvent,
             endState, frameRate)
-

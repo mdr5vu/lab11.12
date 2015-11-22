@@ -4,28 +4,29 @@ import pygame as pg
 
 ################################################################
 
-# This program is an interactive simulation/game. A cat starts
-# to move across the screen. The direction of movement is reversed
-# on each "mouse down" event.
+# This program is an interactive simulation/game. Mario starts in the
+# middle of the screen, and every time the mouse is clicked, he jumps
+# upward. A goomba is moving left across the screen. The object of the
+# game is to avoid the goomba by jumping over it.  
 #
-# The state of the cat is represented by a tuple (pos, delta-pos).`
-# The first element, pos, represents the x-coordinate of the cat.
-# The second element, delta-pos, represents the amount that the
-# position changes on each iteration of the simulation loop.
-#
-# For example, the tuple (7,1) would represent the cat at x-coord,
-# 7, and moving to the right by 1 pixel per "clock tick."
+# The state of the goomba is represented by a tuple (xpos, delta-xpos,ypos,delta-ypos,jumping).
+# The first element, xpos, represents the x-coordinate of the
+# goomba.
+# The second element, delta-xpos, represents the amount that the
+# position changes on each iteration of the simulation loop. The third
+# element, ypos, represents the y-coordinate of the goomba.The fourth
+# element, delta-ypos, represents the amount the y-coordinate changes
+# on each iteration of the simulation loop. The fourth element,
+# jumping represents whether the object is jumping or not.
+
+#The same principles are applied to the mario tuple.
+
 # 
 # The initial state of the cat in this program is (0,1), meaning that the cat
 # starts at the left of the screen and moves right one pixel per tick.
 #
-# Pressing a mouse button down while this simulation run updates the cat state
-# by leaving pos unchanged but reversing delta-pos (changing 1 to -1 and vice
-# versa). That is, pressing a mouse key reverses the direction of the
-# cat.
-#
-# The simulation ends when the cat is allowed to reach either the left
-# or the right edge of the screen.
+# Pressing a mouse button down while this simulation runs 
+# The simulation ends when the goomba leaves the screen. 
 
 ################################################################
 
@@ -47,9 +48,9 @@ goomba = dw.loadImage("goomba.png")
 #
 def updateDisplay(state):
     dw.fill(dw.blue)
-    dw.draw(mario, (state[0], state[2]))
-    dw.draw(goomba, (state[0], state[2]))
-
+    dw.draw(mario, (state[0][0], state[0][2]))
+    dw.draw(goomba, (state[1][0], state[1][2]))
+    
 
 ################################################################
 
@@ -70,7 +71,7 @@ def updateMario(state):
     if newYvalue > 18:
         newYvalue = 0
         newstate = True
-return(state[0]+state[1],state[1],state[2]+state[3],newYvalue,newstate)
+    return((state[0], state[1], state[2]+state[3], newYvalue, newstate))
 
 def updateGoomba(state):
     return((state[0]+state[1], state[1], state[2], state[3]))
@@ -81,11 +82,10 @@ def updateGoomba(state):
 # that is, when pos is less then zero or greater than the screen width
 # state -> bool
 def endState(state):
-    if (state[0] > width or state[0] < 0):
+    if (state[1][0] > width or state[1][0] < 0):
         return True
     else:
         return False
-
 
 ################################################################
 
@@ -103,8 +103,8 @@ def endState(state):
 def handleEvent(state, event):  
 #    print("Handling event: " + str(event))
     if (event.type == pg.MOUSEBUTTONDOWN):
-        if state[4]:
-            return (state[0],state[1],state[2],-18,False)
+        if state[0][4]:
+            return (state[0][0],state[0][1],state[0][2]-18,-18,False)
         return state
     else:
         return(state)
@@ -113,9 +113,24 @@ def handleEvent(state, event):
 
 # World state will be single x coordinate at left edge of world
 
-# The cat starts at the left, moving right 
+#
+# x pos of g
+# y pos of mario
+# 
+    
+# Mario starts off-center to the left, standing still. The Goomba
+# starts off on the right side of the screen, moving to the left, toward Mario. 
 initState = ((100, 0, 420, 0, True), (425, -1, 465, 0, False))
 
+# initState = (mario_y, mario_is_jumping, goomba_x, .., ..)
+# state[0] = mario_y, state[1] = mario_is_jumpin
+
+# initState = ((mario_y, mario_is_jumping), (goomba_x))
+# initState = (marioState, goombaState)
+# state[0][0] = mario_y, state[1][0] = goomba_x
+# def updateState(state):
+#    return (updateMario(state[0]), updateGoomba(state[1]))
+ 
 # Run the simulation no faster than 60 frames per second
 frameRate = 60
 

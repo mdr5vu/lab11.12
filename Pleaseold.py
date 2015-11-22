@@ -1,3 +1,4 @@
+
 import runWorld as rw
 import drawWorld as dw
 import pygame as pg
@@ -30,23 +31,25 @@ import pygame as pg
 ################################################################
 
 # Initialize world
-name = "Cat Fun. Press the mouse (but not too fast)!"
+name = "Simple Mario Fun. Press the mouse to jump over the objects. Make sure you time it right!"
 width = 500
-height = 500
+height = 550
 rw.newDisplay(width, height, name)
 
 ################################################################
 
 # Display the state by drawing a cat at that x coordinate
-myimage = dw.loadImage("cat.bmp")
+mario = dw.loadImage("Paper Mario.png")
+goomba = dw.loadImage("goomba.png")
 
 # state -> image (IO)
 # draw the cat halfway up the screen (height/2) and at the x
 # coordinate given by the first component of the state tuple
 #
 def updateDisplay(state):
-    dw.fill(dw.black)
-    dw.draw(myimage, (state[0], height/2))
+    dw.fill(dw.blue)
+    dw.draw(mario, (state[0], state[2]))
+    dw.draw(goomba, (state[0], state[2]))
 
 
 ################################################################
@@ -58,7 +61,19 @@ def updateDisplay(state):
 #
 # state -> state
 def updateState(state):
-    return((state[0]+state[1],state[1]))
+    return (updateMario(state[0]),updateGoomba(state[1]))
+
+def updateMario(state):
+    newYvalue = state[3]
+    newstate = state[4]
+    if state[4] == False:
+       newYvalue += 1
+    if newYvalue > 18:
+        newYvalue = 0
+        newstate = True
+    return((state[0],state[1],state[2]+state[3],newYvalue,newState))
+def updateGoomba(state):
+    return((state[0]+state[1],state[1],state[2],state[3]))
 
 ################################################################
 
@@ -70,7 +85,6 @@ def endState(state):
         return True
     else:
         return False
-
 
 ################################################################
 
@@ -88,11 +102,9 @@ def endState(state):
 def handleEvent(state, event):  
 #    print("Handling event: " + str(event))
     if (event.type == pg.MOUSEBUTTONDOWN):
-        if (state[1]) == 1:
-            newState = -1
-        else:
-            newState = 1   
-        return((state[0],newState))
+        if state[4]:
+            return (state[0],state[1],state[2],-18,False)
+        return state
     else:
         return(state)
 
@@ -100,25 +112,26 @@ def handleEvent(state, event):
 
 # World state will be single x coordinate at left edge of world
 
+#
+# x pos of g
+# y pos of mario
+# 
+    
 # The cat starts at the left, moving right 
-initState = (0,1)
+initState = (width/4,0,height/1.3,0,True)
 
+# initState = (mario_y, mario_is_jumping, goomba_x, .., ..)
+# state[0] = mario_y, state[1] = mario_is_jumpin
+
+# initState = ((mario_y, mario_is_jumping), (goomba_x))
+# initState = (marioState, goombaState)
+# state[0][0] = mario_y, state[1][0] = goomba_x
+
+# def updateState(state):
+#    return (updateMario(state[0]), updateGoomba(state[1]))
+ 
 # Run the simulation no faster than 60 frames per second
 frameRate = 60
 
 # Run the simulation!
-rw.runWorld(initState, updateDisplay, updateState, handleEvent,
-            endState, frameRate)
-
-
-
-
-
-
-
-
-
-
-
-
-
+rw.runWorld(initState, updateDisplay, updateState, handleEvent, endState, frameRate)

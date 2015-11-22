@@ -8,7 +8,7 @@ import pygame as pg
 # to move across the screen. The direction of movement is reversed
 # on each "mouse down" event.
 #
-# The state of the cat is represented by a tuple (pos, delta-pos).
+# The state of the cat is represented by a tuple (pos, delta-pos).`
 # The first element, pos, represents the x-coordinate of the cat.
 # The second element, delta-pos, represents the amount that the
 # position changes on each iteration of the simulation loop.
@@ -30,23 +30,25 @@ import pygame as pg
 ################################################################
 
 # Initialize world
-name = "Cat Fun. Press the mouse (but not too fast)!"
+name = "Simple Mario Fun. Press the mouse to jump over the objects. Make sure you time it right!"
 width = 500
-height = 500
+height = 550
 rw.newDisplay(width, height, name)
 
 ################################################################
 
 # Display the state by drawing a cat at that x coordinate
-myimage = dw.loadImage("cat.bmp")
+mario = dw.loadImage("Paper Mario.png")
+goomba = dw.loadImage("goomba.png")
 
 # state -> image (IO)
 # draw the cat halfway up the screen (height/2) and at the x
 # coordinate given by the first component of the state tuple
 #
 def updateDisplay(state):
-    dw.fill(dw.black)
-    dw.draw(myimage, (state[0], height/2))
+    dw.fill(dw.blue)
+    dw.draw(mario, (state[0][0], state[0][2]))
+    dw.draw(goomba, (state[1][0], state[1][2]))
 
 
 ################################################################
@@ -58,7 +60,20 @@ def updateDisplay(state):
 #
 # state -> state
 def updateState(state):
-    return((state[0]+state[1],state[1]))
+    return (updateMario(state[0]), updateGoomba(state[1]))
+
+def updateMario(state):
+    newYvalue = state[3]
+    newstate = state[4]
+    if state[4] == False:
+       newYvalue += 1
+    if newYvalue > 18:
+        newYvalue = 0
+        newstate = True
+    return(state[0]+state[1], state[1], state[2]+state[3], newYvalue, newstate)
+
+def updateGoomba(state):
+    return(state[0]+state[1], state[1], state[2], state[3])
 
 ################################################################
 
@@ -66,7 +81,7 @@ def updateState(state):
 # that is, when pos is less then zero or greater than the screen width
 # state -> bool
 def endState(state):
-    if (state[0] > width or state[0] < 0):
+    if (state[1][0] > width or state[1][0] < 0):
         return True
     else:
         return False
@@ -88,37 +103,21 @@ def endState(state):
 def handleEvent(state, event):  
 #    print("Handling event: " + str(event))
     if (event.type == pg.MOUSEBUTTONDOWN):
-        if (state[1]) == 1:
-            newState = -1
-        else:
-            newState = 1   
-        return((state[0],newState))
+        if state[0][4]:
+            return (state[0][0],state[0][1],state[0][2]+state[0][3],-18,False)
+        return state
     else:
-        return(state)
+        return state
 
 ################################################################
 
 # World state will be single x coordinate at left edge of world
 
 # The cat starts at the left, moving right 
-initState = (0,1)
+initState = ((width/4, 0, height/1.3, 0, True), (width, -1, height/1.2, 0, False))
 
 # Run the simulation no faster than 60 frames per second
 frameRate = 60
 
 # Run the simulation!
-rw.runWorld(initState, updateDisplay, updateState, handleEvent,
-            endState, frameRate)
-
-
-
-
-
-
-
-
-
-
-
-
-
+rw.runWorld(initState, updateDisplay, updateState, handleEvent, endState, frameRate)

@@ -8,7 +8,7 @@ import pygame as pg
 # to move across the screen. The direction of movement is reversed
 # on each "mouse down" event.
 #
-# The state of the cat is represented by a tuple (pos, delta-pos).`
+# The state of the cat is represented by a tuple (pos, delta-pos).
 # The first element, pos, represents the x-coordinate of the cat.
 # The second element, delta-pos, represents the amount that the
 # position changes on each iteration of the simulation loop.
@@ -38,8 +38,7 @@ rw.newDisplay(width, height, name)
 ################################################################
 
 # Display the state by drawing a cat at that x coordinate
-mario = dw.loadImage("Paper Mario.png")
-goomba = dw.loadImage("goomba.png")
+myimage = dw.loadImage("Paper Mario.png")
 
 # state -> image (IO)
 # draw the cat halfway up the screen (height/2) and at the x
@@ -47,8 +46,7 @@ goomba = dw.loadImage("goomba.png")
 #
 def updateDisplay(state):
     dw.fill(dw.blue)
-    dw.draw(mario, (state[0], state[2]))
-    dw.draw(goomba, (state[0], state[2]))
+    dw.draw(myimage, (state[0], state[2]))
 
 
 ################################################################
@@ -60,20 +58,14 @@ def updateDisplay(state):
 #
 # state -> state
 def updateState(state):
-    return (updateMario(state[0]), updateGoomba(state[1]))
-
-def updateMario(state):
     newYvalue = state[3]
     newstate = state[4]
     if state[4] == False:
        newYvalue += 1
-    if newYvalue > 18:
+    if newYvalue > 7:
         newYvalue = 0
         newstate = True
-        return(state[0]+state[1],state[1],state[2]+state[3],newYvalue,newstate)
-
-def updateGoomba(state):
-    return((state[0]+state[1], state[1], state[2], state[3]))
+    return(state[0]+state[1],state[1],state[2]+state[3],newYvalue,newstate)
 
 ################################################################
 
@@ -104,7 +96,7 @@ def handleEvent(state, event):
 #    print("Handling event: " + str(event))
     if (event.type == pg.MOUSEBUTTONDOWN):
         if state[4]:
-            return (state[0],state[1],state[2],-18,False)
+            return (state[0],state[1],state[2],-7,False)
         return state
     else:
         return(state)
@@ -114,10 +106,11 @@ def handleEvent(state, event):
 # World state will be single x coordinate at left edge of world
 
 # The cat starts at the left, moving right 
-initState = ((100, 0, 420, 0, True), (425, -1, 465, 0, False))
+initState = (width/2,0,height/1.3,0,True)
 
 # Run the simulation no faster than 60 frames per second
 frameRate = 60
 
 # Run the simulation!
-rw.runWorld(initState, updateDisplay, updateState, handleEvent, endState, frameRate)
+rw.runWorld(initState, updateDisplay, updateState, handleEvent,
+            endState, frameRate)

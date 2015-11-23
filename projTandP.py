@@ -61,7 +61,7 @@ def updateDisplay(state):
 #
 # state -> state
 def updateState(state):
-    return (updateMario(state[0]), updateGoomba(state[1]))
+    return ((updateMario(state[0]), updateGoomba(state[1])))
 
 def updateMario(state):
     newYvalue = state[3]
@@ -74,7 +74,10 @@ def updateMario(state):
     return((state[0], state[1], state[2]+state[3], newYvalue, newstate))
 
 def updateGoomba(state):
-    return((state[0]+state[1], state[1], state[2], state[3]))
+    newXV = state[1]
+    if state[0] < 5 or state[0] > 995:
+        newXV = newXV * -1.2
+    return((state[0]+newXV, newXV, state[2], state[3]))
 
 ################################################################
 

@@ -32,7 +32,7 @@ import pygame as pg
 
 # Initialize world
 name = "Simple Mario Fun. Press the mouse to jump over the objects. Make sure you time it right!"
-width = 500
+width = 1000
 height = 550
 rw.newDisplay(width, height, name)
 
@@ -68,7 +68,7 @@ def updateMario(state):
     newstate = state[4]
     if state[4] == False:
        newYvalue += 1
-    if newYvalue > 18:
+    if newYvalue > 26:
         newYvalue = 0
         newstate = True
     return((state[0], state[1], state[2]+state[3], newYvalue, newstate))
@@ -104,7 +104,7 @@ def handleEvent(state, event):
 #    print("Handling event: " + str(event))
     if (event.type == pg.MOUSEBUTTONDOWN):
         if state[0][4]:
-            return (state[0][0],state[0][1],state[0][2]-18,-18,False)
+            return (((state[0][0], state[0][1], state[0][2], -26, False), (state[1][0],  state[1][1], state[1][2], state[1][3])))
         return state
     else:
         return(state)
@@ -113,14 +113,13 @@ def handleEvent(state, event):
 
 # World state will be single x coordinate at left edge of world
 
-#
 # x pos of g
 # y pos of mario
 # 
     
 # Mario starts off-center to the left, standing still. The Goomba
 # starts off on the right side of the screen, moving to the left, toward Mario. 
-initState = ((100, 0, 420, 0, True), (425, -1, 465, 0, False))
+initState = ((450, 0, 420, 0, True), (900, -4, 465, 0, False))
 
 # initState = (mario_y, mario_is_jumping, goomba_x, .., ..)
 # state[0] = mario_y, state[1] = mario_is_jumpin

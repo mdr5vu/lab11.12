@@ -21,11 +21,6 @@ from numpy import absolute
 # jumping represents whether the object is jumping or not.
 
 #The same principles are applied to the mario tuple.
-
-# 
-# The initial state of the cat in this program is (0,1), meaning that the cat
-# starts at the left of the screen and moves right one pixel per tick.
-#
 # Pressing a mouse button down while this simulation runs 
 # The simulation ends when the goomba leaves the screen. 
 
@@ -39,14 +34,10 @@ rw.newDisplay(width, height, name)
 
 ################################################################
 
-# Display the state by drawing a cat at that x coordinate
+# Display the state by drawing mario and the goomba at that x coordinate
 mario = dw.loadImage("Paper Mario.png")
 goomba = dw.loadImage("goomba.png")
 
-# state -> image (IO)
-# draw the cat halfway up the screen (height/2) and at the x
-# coordinate given by the first component of the state tuple
-#
 def updateDisplay(state):
     dw.fill(dw.blue)
     dw.draw(mario, (state[0][0], state[0][2]))
@@ -82,8 +73,7 @@ def updateGoomba(state):
 
 ################################################################
 
-# Terminate the simulation when the x coord reaches the screen edge,
-# that is, when pos is less then zero or greater than the screen width
+# Terminate the simulation when the mario and goomba touch.
 # state -> bool
 def endState(state):
     if (absolute(state[0][0]-state[1][0]) < 80 and absolute(state[0][2]-state[1][2]) < 80):
@@ -96,11 +86,8 @@ def endState(state):
 # We handle each event by printing (a serialized version of) it on the console
 # and by then responding to the event. If the event is not a "mouse button down
 # event" we ignore it by just returning the current state unchanged. Otherwise
-# we return a new state, with pos the same as in the original state, but
-# delta-pos reversed: if the cat was moving right, we update delta-pos so that
-# it moves left, and vice versa. Each mouse down event changes the cat
-# direction. The game is to keep the cat alive by not letting it run off the
-# edge of the screen.
+# we return a new state, with mario jumping each time the mouse is
+# clicked. THe game is to keep mario alive by avoiding the goomba.
 #
 # state -> event -> state
 #
